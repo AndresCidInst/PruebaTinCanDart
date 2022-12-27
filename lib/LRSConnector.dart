@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
@@ -32,8 +31,6 @@ class LrsConnector {
   late LRS _lrs;
 
   LrsConnector() {
-    _feedbackBroadcast = _feedback.stream.asBroadcastStream();
-
     _lrs = RemoteLRS(
       endpoint: "https://prueba-01.lrs.io/xapi/",
       username: "buzeno",
@@ -42,8 +39,9 @@ class LrsConnector {
   }
 
   saveRegister(Statement statement, Agent agent) {
+    //Establece conección la LRS
     LrsConnector();
-    print("Estamos aquí");
+    //Manda el statement agregandole el agente de forma separada a la construcción del mismo
     _lrs.saveStatement(statement.copyWith(actor: agent));
   }
 }

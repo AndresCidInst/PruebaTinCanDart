@@ -6,9 +6,11 @@ class LrsController {
   void captureRegister() {
     //Creado de statement
     final statement = Statement(
-        verb: LrsUtils().instanciaVerboPlanilla(),
-        object: LrsUtils().instanciaActivdadPlanilla());
-    LrsConnector()
-        .saveRegister(statement, LrsUtils().instanciaAgentePlanilla());
+        verb: LrsUtils().templateVerbInstance(),
+        object: LrsUtils().templateActivityInstace());
+
+    //Llama a la clase encargada de hacerr la conección con la LRS
+    //y llamada al método construido para realizar el registro
+    LrsConnector().saveRegister(statement, LrsUtils().templateAgentInstance());
   }
 }

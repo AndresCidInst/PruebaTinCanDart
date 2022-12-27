@@ -3,8 +3,8 @@ import 'package:tincan/tincan.dart';
 
 class LrsUtils {
   //Código de prueba
-  //Objetos sacados del readme del repositorio https://github.com/jblough/TinCanDart
-  instanciaActivdadPlanilla() {
+  //Objetos sacados de los objetos sacados de la LRS de veracity
+  templateActivityInstace() {
     return Activity(
       id: "https://www.coursera.org/specializations/jhu-data-science/3",
       definition: ActivityDefinition(
@@ -15,7 +15,7 @@ class LrsUtils {
     );
   }
 
-  instanciaAgentePlanilla() {
+  templateAgentInstance() {
     return Agent(
         name: "Lindsy Dael",
         account: AgentAccount(
@@ -23,7 +23,7 @@ class LrsUtils {
             name: "76105110100115121326897101108"));
   }
 
-  instanciaVerboPlanilla() {
+  templateVerbInstance() {
     return Verb(
       id: "http://adlnet.gov/expapi/verbs/scored",
       display: {"en-US": "scored"},
