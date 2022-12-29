@@ -126,6 +126,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       label: Text("Presioname"),
                     ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black),
+                      onPressed: () {
+                        totalPresionados();
+                        _counter = 0;
+                        _incrementCounter();
+                      },
+                      child: Text("Dejar de precionar"),
+                    ),
                   ]),
               Row(
                 children: const [
