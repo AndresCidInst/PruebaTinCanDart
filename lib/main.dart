@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_prueba_1/app/controllers/LrsController.dart';
+import 'package:proyecto_prueba_1/app/utils/LrsUtils.dart';
+import 'package:tincan/tincan.dart';
 
 void main() {
   runApp(const MyApp());
@@ -53,30 +55,109 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _counter++;
     });
   }
 
   void _saveRegister() async {
-    LrsController().captureRegister();
+    LrsController.captureRecordTemplate();
   }
+
+  void totalPresionados() {
+    LrsController.capturePoints(_counter, 10, 0);
+  }
+
+  /*
+  void _retrieveRecod(String id) {
+    Statement record = LrsController.retrieveStatementById(id);
+    (record != null) ? print(record.actor!.account) : print(" No hay registro");
+  }
+  */
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-          child: FloatingActionButton(
-        onPressed: _saveRegister,
-        child: const Icon(Icons.add),
-      )),
-    );
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              //Guardar Registro
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text("Guardar registro de plantilla"),
+                  FloatingActionButton(
+                    onPressed: _saveRegister,
+                    child: const Icon(
+                      Icons.add,
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                children: const [SizedBox(height: 50)],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [Text("Pulse hasta 10 el botón")],
+              ),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black),
+                      onPressed: () {
+                        if (_counter > 9) {
+                          totalPresionados();
+                          _counter = 0;
+                        }
+                        _incrementCounter();
+                      },
+                      icon: const Icon(
+                        Icons.touch_app_outlined,
+                        color: Colors.white,
+                      ),
+                      label: Text("Presioname"),
+                    ),
+                  ]),
+              Row(
+                children: const [
+                  SizedBox(
+                    height: 10,
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Cantidad de veces precionado: $_counter"),
+
+                  /*
+          Row(children: [
+            const Text("Llamar registro"),
+            FloatingActionButton(
+              onPressed: (() {
+                _retrieveRecod("c9c9e162-42c6-4cb1-bcbb-1deb3991dee8");
+              }),
+              child: const Icon(Icons.add),
+            )
+          ])
+          */
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [if (_counter == 10) const Text("Lo has logrado :D")],
+              )
+            ]));
   }
 }

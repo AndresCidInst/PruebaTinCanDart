@@ -44,6 +44,17 @@ class LrsConnector {
     //Manda el statement agregandole el agente de forma separada a la construcción del mismo
     _lrs.saveStatement(statement.copyWith(actor: agent));
   }
+
+  Future<LRSResponse<Statement>> retrieveStatement(String id) async {
+    //Establece conección la LRS
+    LrsConnector();
+    //Recuera el statement
+    return await _lrs.retrieveStatement(id);
+  }
+
+  retrieveAgentById(Agent agenteBuscado) {
+    _lrs.retrievePerson(agenteBuscado);
+  }
 }
 
 final lrsConnector = LrsConnector();
