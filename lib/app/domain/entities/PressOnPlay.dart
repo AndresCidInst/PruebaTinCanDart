@@ -22,7 +22,7 @@ class PressOnPlay {
     _experience++;
   }
 
-  void moreExperience() {
+  void moreExperiencePerLvl() {
     _lvl++;
     _requireExperiencie *= 1.5;
   }

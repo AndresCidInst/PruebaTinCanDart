@@ -141,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         if (press.start.year == 2000) press.setStart(DateTime.now());
                         if (press.counter > 9) {
                           press.setEnd(DateTime.now());
-                          press.moreExperience();
+                          press.moreExperiencePerLvl();
                           _saveRecordResult("Press", "PressToWin");
                           press.counter = 0;
                         }
