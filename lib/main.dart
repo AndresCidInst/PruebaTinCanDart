@@ -59,6 +59,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _setCounterInit() {
+    setState(() {
+      press.counter=0;
+    });
+  }
+
   void _saveRecordTemplate() {
     LrsController.captureRecordTemplate();
   }
@@ -69,6 +75,15 @@ class _MyHomePageState extends State<MyHomePage> {
         LrsUtils.templateAgentInstance(),
         LrsUtils().buildActivity(activity),
         press, "Press de button to win");
+    press.setStart(DateTime(2000));
+    press.setEnd(DateTime(2000));
+  }
+
+  void _saveRecordPress(String verb, String activity) async{
+    LrsController.captureRecord(
+      LrsUtils().buildVerb("en-US", verb),
+        LrsUtils.templateAgentInstance(),
+        LrsUtils().buildActivity(activity));
   }
  /*
   void _totalPresionados() {
@@ -138,12 +153,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black),
                       onPressed: () {
-                        if (press.start.year == 2000) press.setStart(DateTime.now());
+                        if (press.start.year == 2000) {
+                          press.setStart(DateTime.now());
+                          _saveRecordPress("Start","PressOnWin");
+                        }
                         if (press.counter > 9) {
                           press.setEnd(DateTime.now());
                           press.moreExperiencePerLvl();
-                          _saveRecordResult("Press", "PressToWin");
-                          press.counter = 0;
+                          _saveRecordResult("Press", "PressOnWin");
+                          _setCounterInit();
                         }
                         _incrementCounter();
                       },
@@ -160,7 +178,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         if (press.start.year != 2000) {
                           press.setEnd(DateTime.now());
                           _saveRecordResult("Press", "PressOnPLay");
-                          press.counter=0;
+                          _saveRecordPress("Finsh","PressOnWin");
+                          _setCounterInit();
                           _incrementCounter();
                         } else {
                           _alertaNoInicio(context);

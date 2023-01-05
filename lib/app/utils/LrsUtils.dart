@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import '../domain/entities/PressOnPlay.dart';
 import 'package:tincan/tincan.dart';
 
@@ -34,8 +36,8 @@ class LrsUtils {
   }
 
   //Seccion de los métidos del atributo "Activity"
-  Activity buildActivity(String activityId) {
-    return Activity(id: activityProvider + activityId);
+  Activity buildActivity(String activityName) {
+    return Activity(id: activityProvider + activityName);
   }
 
   Activity buildActivityWithDefinition(
@@ -89,6 +91,16 @@ class LrsUtils {
 
   static Result resultOnlyScore(int finalScore, int min, int max) {
     return Result(score: buildScore(finalScore, min, max));
+  }
+
+  static Result buildFullResultVideoTemplate(Duration duration, DateTime start, DateTime end){
+    return Result(
+      duration: TinCanDuration.fromDuration(duration),
+      completion: true,
+      extensions: Extensions({
+        "https://ejemlos.cl/extension/Video/Start": "}"
+      })
+    );
   }
 
     //Herramientas para el atributo Result

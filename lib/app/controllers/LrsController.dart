@@ -37,6 +37,13 @@ class LrsController {
     }
   }
 
+  static void captureRecord(Verb verb, Agent agent, Activity activity){
+    LrsConnector().saveRegister(Statement(
+        verb: verb,
+        object: activity
+    ), agent);
+  }
+
 
   /*
   static retrieveStatementById(String id) {
