@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tincan/tincan.dart';
 

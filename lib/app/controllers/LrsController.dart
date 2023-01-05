@@ -1,4 +1,5 @@
-import 'package:proyecto_prueba_1/LRSconnector.dart';
+import 'package:proyecto_prueba_1/LRSconnector.dart' show LrsConnector;
+import 'package:proyecto_prueba_1/app/domain/entities/PressOnPlay.dart';
 import 'package:proyecto_prueba_1/app/utils/LrsUtils.dart';
 import 'package:tincan/tincan.dart';
 
@@ -24,7 +25,19 @@ class LrsController {
     LrsConnector().saveRegister(statement, LrsUtils.templateAgentInstance());
   }
 
-  static void captureRecord() {}
+  static void captureRecordResult(Verb verb, Agent agent, Activity activity, result, String response) {
+    //Llama valores desde la vista para hacer la construccion y armado del statement
+    if(result.runtimeType == PressOnPlay) {
+      LrsConnector().saveRegister(
+          Statement(
+              verb: verb,
+              object: activity,
+              result: LrsUtils.buildFullResultPress(result, response)
+          ), agent);
+    }
+  }
+
+
   /*
   static retrieveStatementById(String id) {
 

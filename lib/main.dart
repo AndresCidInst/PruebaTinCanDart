@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_prueba_1/app/controllers/LrsController.dart';
+import 'package:proyecto_prueba_1/app/domain/entities/PressOnPlay.dart';
 import 'package:proyecto_prueba_1/app/utils/LrsUtils.dart';
-import 'package:tincan/tincan.dart';
 
 void main() {
   runApp(const MyApp());
@@ -51,28 +51,52 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  PressOnPlay press = PressOnPlay(0, 10);
 
   void _incrementCounter() {
     setState(() {
-      _counter++;
+      press.incrementCounter();
     });
   }
 
-  void _saveRegister() async {
+  void _saveRecordTemplate() {
     LrsController.captureRecordTemplate();
   }
 
-  void totalPresionados() {
-    LrsController.capturePoints(_counter, 10, 0);
+  void _saveRecordResult(String verb, String activity) async {
+    LrsController.captureRecordResult(
+        LrsUtils().buildVerb("en-US", verb),
+        LrsUtils.templateAgentInstance(),
+        LrsUtils().buildActivity(activity),
+        press, "Press de button to win");
   }
+ /*
+  void _totalPresionados() {
+    LrsController.capturePoints(press.counter, 10, 0);
+   }
 
-  /*
   void _retrieveRecod(String id) {
     Statement record = LrsController.retrieveStatementById(id);
     (record != null) ? print(record.actor!.account) : print(" No hay registro");
   }
   */
+
+  //Widgets
+
+  void _alertaNoInicio(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            title: const Text(
+                "Debes precionar iniciar el contador para pecionar este boton"),
+            actions: [
+              TextButton(
+                  onPressed: Navigator.of(context).pop, child: const Text("Ok"))
+            ],
+          );
+        }));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   const Text("Guardar registro de plantilla"),
                   FloatingActionButton(
-                    onPressed: _saveRegister,
+                    onPressed: (() => _saveRecordTemplate),
                     child: const Icon(
                       Icons.add,
                     ),
@@ -114,9 +138,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black),
                       onPressed: () {
-                        if (_counter > 9) {
-                          totalPresionados();
-                          _counter = 0;
+                        if (press.start.year == 2000) press.setStart(DateTime.now());
+                        if (press.counter > 9) {
+                          press.setEnd(DateTime.now());
+                          press.moreExperience();
+                          _saveRecordResult("Press", "PressToWin");
+                          press.counter = 0;
                         }
                         _incrementCounter();
                       },
@@ -124,17 +151,22 @@ class _MyHomePageState extends State<MyHomePage> {
                         Icons.touch_app_outlined,
                         color: Colors.white,
                       ),
-                      label: Text("Presioname"),
+                      label: const Text("Presioname"),
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black),
                       onPressed: () {
-                        totalPresionados();
-                        _counter = 0;
-                        _incrementCounter();
+                        if (press.start.year != 2000) {
+                          press.setEnd(DateTime.now());
+                          _saveRecordResult("Press", "PressOnPLay");
+                          press.counter=0;
+                          _incrementCounter();
+                        } else {
+                          _alertaNoInicio(context);
+                        }
                       },
-                      child: Text("Dejar de precionar"),
+                      child: const Text("Dejar de precionar"),
                     ),
                   ]),
               Row(
@@ -148,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("Cantidad de veces precionado: $_counter"),
+                  Text("Cantidad de veces precionado: ${press.counter}"),
 
                   /*
           Row(children: [
@@ -166,7 +198,9 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [if (_counter == 10) const Text("Lo has logrado :D")],
+                children: [
+                  if (press.counter == 10) const Text("Lo has logrado :D")
+                ],
               )
             ]));
   }
