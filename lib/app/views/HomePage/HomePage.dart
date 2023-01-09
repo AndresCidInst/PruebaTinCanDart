@@ -42,11 +42,10 @@ class _MyHomePageState extends State<MyHomePage> {
     press.setEnd(DateTime(2000));
   }
 
-  void _saveRecordPress(String verb, String activity) async {
+  void _saveSimpleRecord(String verb, String activity) async {
     LrsController.captureRecord(LrsUtils().buildVerb("en-US", verb),
         LrsUtils.templateAgentInstance(), LrsUtils().buildActivity(activity));
   }
-
 
   /*
   void _totalPresionados() {
@@ -91,7 +90,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TextButton(
-                        onPressed: (){Navigator.pushNamed(context, '/video_viewer');},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/video_viewer');
+                          _saveSimpleRecord("Press", "watchTemplateVideo");
+                          _saveSimpleRecord("Watch", "watchTemplateVideo");
+                        },
                         child: const Text("Template de statement video"))
                   ]),
               //Guardar Registro
@@ -126,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onPressed: () {
                         if (press.start.year == 2000) {
                           press.setStart(DateTime.now());
-                          _saveRecordPress("Start", "PressOnWin");
+                          _saveSimpleRecord("Start", "PressOnWin");
                         }
                         if (press.counter > 9) {
                           press.setEnd(DateTime.now());
@@ -149,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         if (press.start.year != 2000) {
                           press.setEnd(DateTime.now());
                           _saveRecordResult("Press", "PressOnPLay");
-                          _saveRecordPress("Finsh", "PressOnWin");
+                          _saveSimpleRecord("Finsh", "PressOnWin");
                           _setCounterInit();
                           _incrementCounter();
                         } else {
