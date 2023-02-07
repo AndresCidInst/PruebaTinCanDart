@@ -9,8 +9,8 @@ void main() {
     // en el Widget FirstScreen
     initialRoute: "/",
     routes: {
-      '/': (context) => MyHomePage(title: "Página de pruebas"),
-      '/video_viewer': (context) => VideoView(),
+      '/': (context) => const MyHomePage(title: "Página de pruebas"),
+      '/video_viewer': (context) => const VideoView(),
     },
   ));
 }

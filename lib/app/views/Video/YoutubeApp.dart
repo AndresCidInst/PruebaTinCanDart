@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:proyecto_prueba_1/app/controllers/LrsController.dart';
 import 'package:proyecto_prueba_1/app/utils/LrsUtils.dart';
@@ -22,77 +24,96 @@ class _YoutubeAppState extends State<YoutubeApp> {
         mute: false,
         showFullscreenButton: true,
         loop: false,
-      ),);
-
+      ),
+    );
     _controller.loadVideo("https://www.youtube.com/watch?v=KR1LmjNT8FM");
+    //Stream para capturar cuando se pausa o reproduce el video
+    _controller.stream.listen((event) {
+      eventCapturer(event);
+    });
   }
 
-  void pausePlay(String verb, String activity, YoutubePlayerController controller) async {
+  void eventCapturer(controller) {
+    switch (controller.playerState) {
+      case PlayerState.playing:
+        pausePlay("Play", "WatchTemplateVideo", _controller);
+        break;
+      case PlayerState.ended:
+        pausePlay("Finish", "WatchTemplateVideo", _controller);
+        break;
+      case PlayerState.paused:
+        pausePlay("Pause", "WatchTemplateVideo", _controller);
+        break;
+      default:
+        break;
+    }
+  }
+
+  void pausePlay(
+      String verb, String activity, YoutubePlayerController controller) async {
     String url = "";
     await controller.videoUrl.then((value) => url = value);
     LrsController.captureRecordResult(
         LrsUtils().buildVerb("en-US", verb),
         LrsUtils.templateAgentInstance(),
         LrsUtils().buildActivity(activity),
-        controller, url);
+        controller,
+        url);
   }
 
-  Widget oneVideo(BuildContext context, double heigth, double width){
+  Widget oneVideo(BuildContext context, double heigth, double width) {
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          SizedBox(
-            height: heigth,
-            width: width,
-            child: YoutubePlayer(
-        controller: _controller,
-              backgroundColor: Colors.black,
-
-      ),
+        child: Column(
+      children: [
+        SizedBox(
+          height: heigth,
+          width: width,
+          child: YoutubePlayer(
+            controller: _controller,
+            backgroundColor: Colors.black,
           ),
-        ],
-      )
-    );
+        ),
+      ],
+    ));
   }
 
-  Row optionButtons(BuildContext context){
+  Row optionButtons(BuildContext context) {
     return Row(
       children: [
         YoutubeValueBuilder(
           builder: (context, value) {
-          return IconButton(
-            icon: Icon(
-              value.playerState == PlayerState.playing
-                  ? Icons.pause
-                  : Icons.play_arrow,
-            ),
-            onPressed: () {
-              if(value.playerState == PlayerState.playing){
-                context.ytController.pauseVideo();
-                pausePlay("Pause", "WatchTemplateVideo", context.ytController);
-              }else{
-                context.ytController.playVideo();
-                pausePlay("Play", "WatchTemplateVideo", context.ytController);
-              }
-            },
-          );
-        },)
+            return IconButton(
+              icon: Icon(
+                value.playerState == PlayerState.playing
+                    ? Icons.pause
+                    : Icons.play_arrow,
+              ),
+              onPressed: () {
+                if (value.playerState == PlayerState.playing) {
+                  context.ytController.pauseVideo();
+                  pausePlay(
+                      "Pause", "WatchTemplateVideo", context.ytController);
+                } else {
+                  context.ytController.playVideo();
+                  pausePlay("Play", "WatchTemplateVideo", context.ytController);
+                }
+              },
+            );
+          },
+        )
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    double heigth = MediaQuery.of(context).size.height*0.7;
-    double width = MediaQuery.of(context).size.width*0.7;
+    double heigth = MediaQuery.of(context).size.height * 0.7;
+    double width = MediaQuery.of(context).size.width * 0.7;
     return YoutubePlayerScaffold(
-        controller: _controller, 
-        builder: (context, player){
+        controller: _controller,
+        builder: (context, player) {
           return Column(
-            children: [
-              oneVideo(context, heigth, width),
-              optionButtons(context)
-            ],
+            children: [oneVideo(context, heigth, width)],
           );
         });
   }
